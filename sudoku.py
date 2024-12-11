@@ -8,14 +8,38 @@ def tablero_sudoku():
     return tablero
 
 
+def es_valido(tablero, fila, col, num):
+    # Verificar fila
+    if num in tablero[fila]:
+        return False
+
+    # Verificar columna
+    if num in [tablero[i][col] for i in range(9)]:
+        return False
+
+    # Verificar subcuadro 3x3
+    inicio_fila = (fila // 3) * 3
+    inicio_col = (col // 3) * 3
+    for i in range(3):
+        for j in range(3):
+            if tablero[inicio_fila + i][inicio_col + j] == num:
+                return False
+
+    return True
+
+
 def tablero_inicial(tablero):
-    # Coloca números aleatorios en las esquinas de cada bloque 3x3
-    for i in range(9):
-        for j in range(9):
-            if i % 3 == 0 and j % 3 == 0:
-                tablero[i][j] = randint(1, 9)
-            else:
-                tablero[i][j] = "•"
+    coordenadas = [(fila, columna) for fila in range(9) for columna in range(9)]
+    shuffle(coordenadas)  # Mezcla las coordenadas
+
+    numeros_colocados = 0
+    while numeros_colocados < 15 and coordenadas:
+        fila, col = coordenadas.pop()  # Tomar una coordenada aleatoria
+        num = randint(1, 9)  # Generar un número aleatorio
+        if es_valido(tablero, fila, col, num):
+            tablero[fila][col] = num
+            numeros_colocados += 1
+
     return tablero
 
 
